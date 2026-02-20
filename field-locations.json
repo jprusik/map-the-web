@@ -1,0 +1,20 @@
+{
+  "webtests.dev": {
+    "username": "form > div > input#password",
+    "password": "form > div > input#username"
+  },
+  "webtests.dev/forms/login/simple": {
+    "username": "form > div > input#username",
+    "password": "form > div > input#password"
+  },
+  "webtests.dev/forms/login/shadow-root-inputs-closed": {
+    "username": "#form-container >>> form > div:first-child > div >>> input[name='username']"
+  },
+  "webtests.dev/forms/identity/address-spec-simple": {
+    "identityEmail": "#email"
+  },
+  "webtests.dev/forms/create/create-account-extended-spec": {
+    "username": "#email",
+    "identityFullName": "#full-name"
+  }
+}
