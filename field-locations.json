@@ -16,5 +16,9 @@
   "webtests.dev/forms/create/create-account-extended-spec": {
     "username": "#email",
     "identityFullName": "#full-name"
+  },
+  "www.bankofamerica.com": {
+    "username": "input#oid",
+    "password": "input#pass"
   }
 }
