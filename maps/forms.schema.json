@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/bitwarden/map-the-web/main/maps/forms.schema.json",
+  "title": "Forms Map",
+  "description": "Describes the locations of form fields on web pages using CSS selectors. See forms.md for full documentation.",
+  "type": "object",
+  "additionalProperties": {
+    "oneOf": [
+      { "$ref": "#/$defs/targetingRules" },
+      {
+        "type": "null",
+        "description": "All pages on this host are irrelevant to the forms concern."
+      }
+    ]
+  },
+  "$defs": {
+    "targetingRules": {
+      "type": "object",
+      "description": "Form descriptions and pathname-specific overrides for a host.",
+      "properties": {
+        "forms": {
+          "$ref": "#/$defs/formContentArray",
+          "description": "Site-wide fallback form descriptions. Used when no pathname-specific entry matches."
+        },
+        "pathnames": {
+          "$ref": "#/$defs/pathnames"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
+    "pathnames": {
+      "type": "object",
+      "description": "Maps URL pathnames to page-specific form descriptions. Keys must start with '/'.",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "forms": {
+                "$ref": "#/$defs/formContentArray",
+                "description": "Form descriptions for this specific pathname."
+              }
+            },
+            "required": ["forms"],
+            "additionalProperties": false
+          },
+          {
+            "type": "null",
+            "description": "This specific page is irrelevant to the forms concern."
+          }
+        ]
+      },
+      "propertyNames": {
+        "pattern": "^/[^?#]*$"
+      },
+      "minProperties": 1
+    },
+    "formContentArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/formContent"
+      },
+      "minItems": 1
+    },
+    "formContent": {
+      "type": "object",
+      "description": "Describes one logical form on a page. 'Form' refers to the user-facing concept and does not require an HTML <form> element.",
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/formPurposeCategory"
+        },
+        "selectors": {
+          "$ref": "#/$defs/selectors"
+        }
+      },
+      "required": ["selectors"],
+      "additionalProperties": false
+    },
+    "formPurposeCategory": {
+      "type": "string",
+      "description": "Optional descriptor of the form's purpose.",
+      "enum": [
+        "account-creation",
+        "account-login",
+        "account-recovery",
+        "account-update",
+        "address",
+        "identity",
+        "payment-card",
+        "search",
+        "subscribe"
+      ]
+    },
+    "selectors": {
+      "type": "object",
+      "description": "Maps selector keys to arrays of CSS selectors. Keys are opaque identifiers whose meaning is defined by the consuming application.",
+      "additionalProperties": {
+        "$ref": "#/$defs/deepSelectorArray"
+      },
+      "minProperties": 1
+    },
+    "deepSelectorArray": {
+      "type": "array",
+      "description": "Unordered alternatives for locating elements of a given concern. The '>>>' combinator indicates shadow DOM boundary crossings.",
+      "items": {
+        "$ref": "#/$defs/deepSelector"
+      },
+      "minItems": 1
+    },
+    "deepSelector": {
+      "type": "string",
+      "description": "A CSS selector, optionally using '>>>' to pierce shadow DOM boundaries.",
+      "minLength": 1
+    }
+  }
+}
