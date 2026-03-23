@@ -25,16 +25,19 @@ This Map describes **the content of a page**. It does not prescribe or imply how
 
 ```json
 {
-  "<host>": {
-    "forms": [ ... ],           // optional — site-wide fallback
-    "pathnames": {              // optional
-      "<pathname>": {
-        "forms": [ ... ]
-      },
-      "<pathname>": null        // signals this page should be skipped
-    }
-  },
-  "<host>": null                // signals all pages on this host should be skipped
+  "version": "1.0.0",
+  "hosts": {
+    "<host>": {
+      "forms": [ ... ],           // optional — site-wide fallback
+      "pathnames": {              // optional
+        "<pathname>": {
+          "forms": [ ... ]
+        },
+        "<pathname>": null        // signals this page should be skipped
+      }
+    },
+    "<host>": null                // signals all pages on this host should be skipped
+  }
 }
 ```
 
@@ -42,29 +45,32 @@ A complex entry may look like:
 
 ```json
 {
-  "example.com": {
-    "forms": [
-      {
-        "category": "account-login",
-        "selectors": {
-          "username": ["input#email"],
-          "password": ["input#pass"]
-        }
-      }
-    ],
-    "pathnames": {
-      "/register": {
-        "forms": [
-          {
-            "category": "account-creation",
-            "selectors": {
-              "username": ["input#reg-email"],
-              "password": ["input#reg-password"]
-            }
+  "version": "1.0.0",
+  "hosts": {
+    "example.com": {
+      "forms": [
+        {
+          "category": "account-login",
+          "selectors": {
+            "username": ["input#email"],
+            "password": ["input#pass"]
           }
-        ]
-      },
-      "/spreadsheets": null
+        }
+      ],
+      "pathnames": {
+        "/register": {
+          "forms": [
+            {
+              "category": "account-creation",
+              "selectors": {
+                "username": ["input#reg-email"],
+                "password": ["input#reg-password"]
+              }
+            }
+          ]
+        },
+        "/spreadsheets": null
+      }
     }
   }
 }
@@ -72,14 +78,15 @@ A complex entry may look like:
 
 ## Host Keys
 
-Each top-level key is a **host**: a hostname, or a hostname with a port when a non-default port is used. Do not include the protocol, path, query string, or fragment. Do not include default ports such as `443` and `80`.
+Each key in the `hosts` object is a **host**: a hostname, or a hostname with a port when a non-default port is used. Do not include the protocol, path, query string, or fragment. Do not include default ports such as `443` and `80`.
 
 ```json
 {
-  "example.com": { ... },
-  "login.subdomain.example.com": { ... },
-  "example.com:1234": { ... }
-}
+  "hosts": {
+    "example.com": { ... },
+    "login.subdomain.example.com": { ... },
+    "example.com:1234": { ... }
+  }
 ```
 
 Host keys are **exact-match only**. There is no wildcard, suffix, or domain inheritance:
@@ -111,27 +118,30 @@ The `pathnames` object maps URL pathnames to page-specific entries. Pathnames mu
 
 ```json
 {
-  "example.com": {
-    "forms": [
-      {
-        "selectors": {
-          "username": ["input#user"],
-          "password": ["input#pass"]
-        }
-      }
-    ],
-    "pathnames": {
-      "/login": {
-        "forms": [
-          {
-            "selectors": {
-              "username": ["input#login-email"],
-              "password": ["input#login-pass"]
-            }
+  "version": "1.0.0",
+  "hosts": {
+    "example.com": {
+      "forms": [
+        {
+          "selectors": {
+            "username": ["input#user"],
+            "password": ["input#pass"]
           }
-        ]
-      },
-      "/spreadsheets": null
+        }
+      ],
+      "pathnames": {
+        "/login": {
+          "forms": [
+            {
+              "selectors": {
+                "username": ["input#login-email"],
+                "password": ["input#login-pass"]
+              }
+            }
+          ]
+        },
+        "/spreadsheets": null
+      }
     }
   }
 }

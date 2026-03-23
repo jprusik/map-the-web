@@ -1,76 +1,79 @@
 {
-  "webtests.dev": {
-    "forms": [
-      {
-        "selectors": {
-          "username": ["form > div > input#password"],
-          "password": ["form > div > input#username"]
+  "version": "1.0.0",
+  "hosts": {
+    "webtests.dev": {
+      "forms": [
+        {
+          "selectors": {
+            "username": ["form > div > input#password"],
+            "password": ["form > div > input#username"]
+          }
+        }
+      ],
+      "pathnames": {
+        "/forms/search/simple-search": null,
+        "/forms/login/simple": {
+          "forms": [
+            {
+              "selectors": {
+                "username": ["form > div > input#username"],
+                "password": ["form > div > input#password"]
+              }
+            }
+          ]
+        },
+        "/forms/login/shadow-root-inputs-closed": {
+          "forms": [
+            {
+              "selectors": {
+                "username": ["#form-container >>> form > div:first-child > div >>> input[name='username']"]
+              }
+            }
+          ]
+        },
+        "/forms/identity/address-spec-simple": {
+          "forms": [
+            {
+              "selectors": {
+                "identityEmail": ["#email"]
+              }
+            }
+          ]
+        },
+        "/forms/create/create-account-extended-spec": {
+          "forms": [
+            {
+              "selectors": {
+                "username": ["#email"],
+                "identityFullName": ["#full-name"]
+              }
+            }
+          ]
         }
       }
-    ],
-    "pathnames": {
-      "/forms/search/simple-search": null,
-      "/forms/login/simple": {
-        "forms": [
-          {
-            "selectors": {
-              "username": ["form > div > input#username"],
-              "password": ["form > div > input#password"]
-            }
+    },
+    "www.bankofamerica.com": {
+      "forms": [
+        {
+          "selectors": {
+            "username": ["input#oid"],
+            "password": ["input#pass"]
           }
-        ]
-      },
-      "/forms/login/shadow-root-inputs-closed": {
-        "forms": [
-          {
-            "selectors": {
-              "username": ["#form-container >>> form > div:first-child > div >>> input[name='username']"]
-            }
-          }
-        ]
-      },
-      "/forms/identity/address-spec-simple": {
-        "forms": [
-          {
-            "selectors": {
-              "identityEmail": ["#email"]
-            }
-          }
-        ]
-      },
-      "/forms/create/create-account-extended-spec": {
-        "forms": [
-          {
-            "selectors": {
-              "username": ["#email"],
-              "identityFullName": ["#full-name"]
-            }
-          }
-        ]
-      }
-    }
-  },
-  "www.bankofamerica.com": {
-    "forms": [
-      {
-        "selectors": {
-          "username": ["input#oid"],
-          "password": ["input#pass"]
         }
-      }
-    ]
-  },
-  "factorio.com": {
-    "pathnames": {
-      "/login": {
-        "forms": [
-          {
-            "selectors": {
-              "username": ["input#oid"],
-              "password": ["input#pass"]
+      ]
+    },
+    "factorio.com": {
+      "pathnames": {
+        "/login": {
+          "forms": [
+            {
+              "selectors": {
+                "username": ["input#oid"],
+                "password": ["input#pass"]
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     }
   }

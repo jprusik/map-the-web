@@ -7,6 +7,7 @@ Map the Web offers curated guidance for interacting with websites lacking rich s
     - [Mapping Philosophies](#mapping-philosophies)
   - [Limitations](#limitations)
   - [Using Maps](#using-maps)
+    - [Versioning](#versioning)
   - [Glossary](#glossary)
 
 ## Goals and Intent
@@ -35,6 +36,16 @@ While this project aspires to map all discovered gaps of the web, this is largel
 ## Using Maps
 
 All Maps can be found in the `maps` directory and are represented as JSON files named after their core concern (e.g. `forms.json`). Maps may optionally include sibling files with shared naming conventions in order to better document or improve their usage (e.g. `forms.md`).
+
+### Versioning
+
+Each Map file includes a required top-level `version` field that identifies which revision of its schema the file conforms to. This project uses [semantic versioning](https://semver.org/):
+
+- **Major**: Breaking changes to the data structure or semantics
+- **Minor**: Backwards-compatible additions (e.g. new optional properties, new category values)
+- **Patch**: Documentation or schema clarifications with no data-level impact
+
+Consumers should check the `version` field before processing a Map and reject or warn on unrecognized major versions.
 
 ## Glossary
 

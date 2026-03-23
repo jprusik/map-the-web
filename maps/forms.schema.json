@@ -4,15 +4,28 @@
   "title": "Forms Map",
   "description": "Describes the locations of form fields on web pages using CSS selectors. See forms.md for full documentation.",
   "type": "object",
-  "additionalProperties": {
-    "oneOf": [
-      { "$ref": "#/$defs/targetingRules" },
-      {
-        "type": "null",
-        "description": "All pages on this host are irrelevant to the forms concern."
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Schema version this file conforms to. Must match the version expected by the schema."
+    },
+    "hosts": {
+      "type": "object",
+      "description": "Maps hostnames to their form descriptions.",
+      "additionalProperties": {
+        "oneOf": [
+          { "$ref": "#/$defs/targetingRules" },
+          {
+            "type": "null",
+            "description": "All pages on this host are irrelevant to the forms concern."
+          }
+        ]
       }
-    ]
+    }
   },
+  "required": ["version", "hosts"],
+  "additionalProperties": false,
   "$defs": {
     "targetingRules": {
       "type": "object",
