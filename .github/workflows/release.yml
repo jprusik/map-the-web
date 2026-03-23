@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build without publishing a release"
+        type: boolean
+        default: false
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Node
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+          node-version-file: ".nvmrc"
+
+      - run: npm ci
+
+      - name: Validate
+        run: npm run check
+
+      - name: Resolve build ID
+        id: build-id
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            BUILD_ID="${GITHUB_REF_NAME}"
+          else
+            BUILD_ID="manual-$(date -u +%Y%m%d)-${GITHUB_RUN_NUMBER}"
+          fi
+          echo "build_id=$BUILD_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: npm run build
+        env:
+          BUILD_ID: ${{ steps.build-id.outputs.build_id }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create release
+        if: github.ref_type == 'tag' && !inputs.dry_run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+          gh release create "$TAG" \
+            --title "Release ${TAG}" \
+            --notes "$(cat <<EOF
+          ## ${TAG}
+
+          **Timestamp**: ${TIMESTAMP}
+          **Git SHA**: ${GITHUB_SHA}
+
+          ### Assets
+          - \`forms.json\` — Minified forms map
+          - \`forms.schema.json\` — Forms map schema
+          - \`manifest.json\` — Build metadata
+          - \`checksums.sha256\` — SHA-256 checksums
+          EOF
+          )" \
+            --latest \
+            dist/maps/forms/forms.json \
+            dist/maps/forms/forms.schema.json \
+            dist/manifest.json \
+            dist/checksums.sha256

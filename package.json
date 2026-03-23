@@ -9,7 +9,9 @@
     "lint:md": "remark . --frail --quiet",
     "validate": "node scripts/validate-schemas.mjs",
     "validate:all": "node scripts/validate-schemas.mjs maps/**/*.json",
-    "check": "npm run prettier && npm run lint:md && npm run validate:all"
+    "check": "npm run prettier && npm run lint:md && npm run validate:all",
+    "build": "node scripts/build.mjs",
+    "build:clean": "rm -rf dist && node scripts/build.mjs"
   },
   "engines": {
     "node": ">=22",

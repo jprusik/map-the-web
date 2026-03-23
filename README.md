@@ -9,6 +9,7 @@ semantics or fully-adopted standards.
   - [Limitations](#limitations)
   - [Using Maps](#using-maps)
     - [Versioning](#versioning)
+    - [Releases](#releases)
   - [Glossary](#glossary)
 
 ## Goals and Intent
@@ -67,6 +68,29 @@ which revision of its schema the file conforms to. This project uses
 
 Consumers should check the `version` field before processing a Map and reject or
 warn on unrecognized major versions.
+
+### Releases
+
+Map data is published as optimized builds via
+[GitHub Releases](https://github.com/bitwarden/map-the-web/releases). Each
+release contains minified Map JSON files, their schemas, a build manifest, and
+SHA-256 checksums.
+
+**Latest build** (always points to the newest release):
+
+```text
+https://github.com/bitwarden/map-the-web/releases/latest/download/forms.json
+```
+
+**Pinned build** (locked to a specific release tag):
+
+```text
+https://github.com/bitwarden/map-the-web/releases/download/<tag>/forms.json
+```
+
+Each release includes a `manifest.json` with build metadata (timestamp, git SHA,
+and per-map schema versions) that consumers can use to check staleness or verify
+compatibility.
 
 ## Glossary
 
