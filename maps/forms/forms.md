@@ -2,7 +2,7 @@
 
 The Forms Map (`forms.json`) describes the locations of form fields on web pages using CSS selectors. It enables consuming applications to locate specific fields without relying on heuristic determinations or page-specific detection logic.
 
-This Map describes **the content of a page**. It does not prescribe or imply how a consumer of this Map should behave. Additionally, the term "form" here describes the user-facing concept, which may or may not utilize the HTML `form` tag. See the project [README](../README.md) for broader mapping philosophies.
+This Map describes **the content of a page**. It does not prescribe or imply how a consumer of this Map should behave. Additionally, the term "form" here describes the user-facing concept, which may or may not utilize the HTML `form` tag. See the project [README](../../README.md) for broader mapping philosophies.
 
 - [Forms Map](#forms-map)
   - [Data Structure Overview](#data-structure-overview)
