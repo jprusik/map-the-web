@@ -6,7 +6,7 @@
     "prepare": "husky",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "lint:md": "markdownlint-cli2 '**/*.md'",
+    "lint:md": "remark . --quiet",
     "validate": "node scripts/validate-schemas.mjs",
     "validate:all": "node scripts/validate-schemas.mjs maps/**/*.json",
     "check": "npm run prettier && npm run lint:md && npm run validate:all"
@@ -23,8 +23,7 @@
       "node scripts/validate-schemas.mjs"
     ],
     "*.md": [
-      "prettier --check",
-      "markdownlint-cli2"
+      "remark --quiet"
     ]
   },
   "devDependencies": {
@@ -32,7 +31,12 @@
     "ajv-formats": "^3.0.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "markdownlint-cli2": "^0.22.0",
-    "prettier": "^3.8.1"
+    "prettier": "^3.8.1",
+    "remark-cli": "^12.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-github-blockquote-alert": "^2.1.0",
+    "remark-lint-no-trailing-spaces": "^4.0.3",
+    "remark-preset-lint-consistent": "^6.0.1",
+    "remark-preset-lint-recommended": "^7.0.1"
   }
 }
