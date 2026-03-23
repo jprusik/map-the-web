@@ -1,0 +1,38 @@
+{
+  "name": "map-the-web",
+  "private": true,
+  "description": "Map the Web offers curated guidance for interacting with websites lacking rich semantics or fully-adopted standards.",
+  "scripts": {
+    "prepare": "husky",
+    "prettier:fix": "prettier --write .",
+    "prettier": "prettier --check .",
+    "lint:md": "markdownlint-cli2 '**/*.md'",
+    "validate": "node scripts/validate-schemas.mjs",
+    "validate:all": "node scripts/validate-schemas.mjs maps/**/*.json",
+    "check": "npm run prettier && npm run lint:md && npm run validate:all"
+  },
+  "engines": {
+    "node": ">=22",
+    "npm": ">=11"
+  },
+  "lint-staged": {
+    "*.json": [
+      "prettier --check"
+    ],
+    "maps/**/*.json": [
+      "node scripts/validate-schemas.mjs"
+    ],
+    "*.md": [
+      "prettier --check",
+      "markdownlint-cli2"
+    ]
+  },
+  "devDependencies": {
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "markdownlint-cli2": "^0.22.0",
+    "prettier": "^3.8.1"
+  }
+}
