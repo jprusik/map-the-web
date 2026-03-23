@@ -6,7 +6,7 @@
     "prepare": "husky",
     "prettier:fix": "prettier --write .",
     "prettier": "prettier --check .",
-    "lint:md": "remark . --quiet",
+    "lint:md": "remark . --frail --quiet",
     "validate": "node scripts/validate-schemas.mjs",
     "validate:all": "node scripts/validate-schemas.mjs maps/**/*.json",
     "check": "npm run prettier && npm run lint:md && npm run validate:all"
@@ -23,7 +23,7 @@
       "node scripts/validate-schemas.mjs"
     ],
     "*.md": [
-      "remark --quiet"
+      "remark --frail --quiet"
     ]
   },
   "devDependencies": {
