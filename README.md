@@ -52,7 +52,7 @@ the web.
 
 Each Map lives in its own subdirectory under `maps/`, named after its core
 concern (e.g. `maps/forms/`). A Map directory contains the JSON data file
-(`forms.json`), its schema (`forms.schema.json`), and a `README.md` documenting
+(`forms.jsonc`), its schema (`forms.schema.json`), and a `README.md` documenting
 the Map's structure and usage.
 
 ### Versioning

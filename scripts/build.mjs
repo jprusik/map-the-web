@@ -4,6 +4,7 @@ import { basename, dirname, join, relative } from "path";
 import { glob } from "node:fs/promises";
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import stripJsonComments from "strip-json-comments";
 
 const DIST = "dist";
 
@@ -14,7 +15,7 @@ const maps = [];
 for await (const schemaFile of glob("maps/*/*.schema.json")) {
   const dir = dirname(schemaFile);
   const name = basename(dir);
-  const dataFile = join(dir, `${name}.json`);
+  const dataFile = join(dir, `${name}.jsonc`);
   maps.push({ name, dir, dataFile, schemaFile });
 }
 
@@ -36,7 +37,9 @@ let hasErrors = false;
 
 for (const map of maps) {
   const schema = JSON.parse(readFileSync(map.schemaFile, "utf-8"));
-  const data = JSON.parse(readFileSync(map.dataFile, "utf-8"));
+  const data = JSON.parse(
+    stripJsonComments(readFileSync(map.dataFile, "utf-8")),
+  );
 
   const validate = ajv.compile(schema);
   if (!validate(data)) {

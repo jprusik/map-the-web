@@ -1,5 +1,6 @@
 import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
+import stripJsonComments from "strip-json-comments";
 import { readFileSync, existsSync } from "fs";
 import { basename, dirname, join } from "path";
 import { glob } from "node:fs/promises";
@@ -10,14 +11,11 @@ addFormats(ajv);
 let files = process.argv.slice(2);
 
 if (files.length === 0) {
-  const matches = glob("maps/**/*.json");
+  const matches = glob("maps/**/*.jsonc");
   for await (const match of matches) {
     files.push(match);
   }
 }
-
-// Filter to only map data files (exclude schema files)
-files = files.filter((f) => !f.endsWith(".schema.json"));
 
 if (files.length === 0) {
   console.log("No map files to validate.");
@@ -28,7 +26,7 @@ let hasErrors = false;
 
 for (const file of files) {
   const dir = dirname(file);
-  const name = basename(file, ".json");
+  const name = basename(file, ".jsonc");
   const schemaPath = join(dir, `${name}.schema.json`);
 
   if (!existsSync(schemaPath)) {
@@ -37,7 +35,7 @@ for (const file of files) {
     continue;
   }
 
-  const data = JSON.parse(readFileSync(file, "utf-8"));
+  const data = JSON.parse(stripJsonComments(readFileSync(file, "utf-8")));
   const schema = JSON.parse(readFileSync(schemaPath, "utf-8"));
 
   const validate = ajv.compile(schema);

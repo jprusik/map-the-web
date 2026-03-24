@@ -8,7 +8,7 @@
     "prettier": "prettier --check .",
     "lint:md": "remark . --frail --quiet",
     "validate": "node scripts/validate-schemas.mjs",
-    "validate:all": "node scripts/validate-schemas.mjs maps/**/*.json",
+    "validate:all": "node scripts/validate-schemas.mjs maps/**/*.jsonc",
     "check": "npm run prettier && npm run lint:md && npm run validate:all",
     "build": "node scripts/build.mjs",
     "build:clean": "rm -rf dist && node scripts/build.mjs"
@@ -21,7 +21,7 @@
     "*.json": [
       "prettier --check"
     ],
-    "maps/**/*.json": [
+    "maps/**/*.jsonc": [
       "node scripts/validate-schemas.mjs"
     ],
     "*.md": [
@@ -39,6 +39,7 @@
     "remark-github-blockquote-alert": "^2.1.0",
     "remark-lint-no-trailing-spaces": "^4.0.3",
     "remark-preset-lint-consistent": "^6.0.1",
-    "remark-preset-lint-recommended": "^7.0.1"
+    "remark-preset-lint-recommended": "^7.0.1",
+    "strip-json-comments": "^5.0.3"
   }
 }

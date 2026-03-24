@@ -1,6 +1,6 @@
 # Forms Map
 
-The Forms Map (`forms.json`) describes the locations of form fields on web pages
+The Forms Map (`forms.jsonc`) describes the locations of form fields on web pages
 using CSS selectors. It enables consuming applications to locate specific fields
 without relying on heuristic determinations or page-specific detection logic.
 

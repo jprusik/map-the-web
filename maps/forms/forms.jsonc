@@ -1,6 +1,7 @@
 {
   "version": "1.0.0",
   "hosts": {
+    // Test entry, will be removed
     "webtests.dev": {
       "forms": [
         {

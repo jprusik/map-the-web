@@ -4,5 +4,13 @@
   "endOfLine": "lf",
   "singleQuote": false,
   "trailingComma": "all",
-  "proseWrap": "always"
+  "proseWrap": "always",
+  "overrides": [
+    {
+      "files": "*.jsonc",
+      "options": {
+        "trailingComma": "none"
+      }
+    }
+  ]
 }
