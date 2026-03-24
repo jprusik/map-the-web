@@ -76,17 +76,15 @@ Map data is published as optimized builds via
 release contains minified Map JSON files, their schemas, a build manifest, and
 SHA-256 checksums.
 
-**Latest build** (always points to the newest release):
-
 ```text
-https://github.com/bitwarden/map-the-web/releases/latest/download/forms.v1.json
+Latest build (always points to the newest release):
+https://<project URL>/releases/latest/download/<map name>.v1.json
+
+Pinned build (locked to a specific release tag):
+https://<project URL>/releases/download/<tag>/<map name>.v1.json
 ```
 
-**Pinned build** (locked to a specific release tag):
-
-```text
-https://github.com/bitwarden/map-the-web/releases/download/<tag>/forms.v1.json
-```
+Example: <https://github.com/bitwarden/map-the-web/releases/latest/download/forms.v1.json>
 
 Build filenames include the schema major version (e.g. `forms.v1.json`). When a
 breaking schema change is released, both `forms.v1.json` and `forms.v2.json` can
