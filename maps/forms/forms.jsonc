@@ -1,60 +1,184 @@
 {
   "version": "1.0.0",
   "hosts": {
-    // Test entry, will be removed
+    // ── Test coverage: targeted fill, www equivalence, heuristic fallback ──
+    // Site-wide login fallback: applies to any page on webtests.dev
+    // without a more specific pathname match.
+    // www.webtests.dev will fall back to this entry (www equivalence).
+    // Pages without pathname entries (e.g. /forms/response/login-success)
+    // use heuristics because no site-wide or pathname rules match.
+    //
+    // NOTE: username/password selectors are DELIBERATELY FLIPPED (cipher
+    // username → password input, cipher password → username input) so that
+    // a targeted fill is visually distinguishable from heuristic fill.
     "webtests.dev": {
       "forms": [
         {
+          "category": "account-login",
           "selectors": {
-            "username": ["form > div > input#password"],
-            "password": ["form > div > input#username"]
+            "username": ["input#password"],
+            "password": ["input#username"]
           }
         }
       ],
       "pathnames": {
-        "/forms/search/simple-search": null,
-        "/forms/login/simple": {
+        // ── Test coverage: pathname-specific override (card payment) ──
+        "/forms/payment/card-payment": {
           "forms": [
             {
+              "category": "payment-card",
               "selectors": {
-                "username": ["form > div > input#username"],
-                "password": ["form > div > input#password"]
+                "cardholderName": ["input#card-name"],
+                "cardNumber": ["input#card-number"],
+                "cardExpirationDate": ["input#card-expiration"],
+                "cardCvv": ["input#card-cvv"]
               }
             }
           ]
         },
+        // ── Test coverage: shadow DOM >>> traversal (two levels) ──
+        // Open shadow root on #form-container, closed shadow roots on
+        // inner divs wrapping each input.
         "/forms/login/shadow-root-inputs-closed": {
           "forms": [
             {
+              "category": "account-login",
               "selectors": {
                 "username": [
-                  "#form-container >>> form > div:first-child > div >>> input[name='username']"
+                  "div#form-container >>> form > div:nth-of-type(2) > div >>> input[name='password']"
+                ],
+                "password": [
+                  "div#form-container >>> form > div:nth-of-type(1) > div >>> input[name='username']"
                 ]
               }
             }
           ]
         },
-        "/forms/identity/address-spec-simple": {
+        // ── Test coverage: selector alternatives (first match wins) ──
+        // Two selectors per field; first is more specific, second is a
+        // fallback. Honeypot fields are NOT targeted; only the real fields.
+        "/forms/login/login-honeypot": {
           "forms": [
             {
+              "category": "account-login",
               "selectors": {
-                "identityEmail": ["#email"]
+                "username": [
+                  "input#password[name='password']",
+                  "input[name='password']"
+                ],
+                "password": [
+                  "input#username[name='username']",
+                  "input[name='username']"
+                ]
               }
             }
           ]
         },
-        "/forms/create/create-account-extended-spec": {
+        // ── Test coverage: hidden/viewable fields ──
+        // Multi-step form; fields may be display:none at any given step.
+        // This should still fill.
+        "/forms/login/hidden-login": {
           "forms": [
             {
+              "category": "account-login",
               "selectors": {
-                "username": ["#email"],
-                "identityFullName": ["#full-name"]
+                "username": ["input#password"],
+                "password": ["input#username"]
+              }
+            }
+          ]
+        },
+        // ── Test coverage: formless (no <form> tag) ──
+        // Bare inputs submitted via fetch; no enclosing form element.
+        "/forms/login/bare-inputs-login": {
+          "forms": [
+            {
+              "category": "account-login",
+              "selectors": {
+                "username": ["input#password"],
+                "password": ["input#username"]
+              }
+            }
+          ]
+        },
+        // ── Test coverage: account creation (newPassword) ──
+        "/forms/create/create-account": {
+          "forms": [
+            {
+              "category": "account-creation",
+              "selectors": {
+                "username": ["input#password"],
+                "newPassword": ["input#email"]
+              }
+            }
+          ]
+        },
+        // ── Test coverage: identity fields ──
+        "/forms/identity/address-na": {
+          "forms": [
+            {
+              "category": "identity",
+              "selectors": {
+                "fullName": ["input#full-name"],
+                "organization": ["input#company-name"],
+                "email": ["input#email"],
+                "phone": ["input#phone-number"],
+                "addressLine1": ["input#address"],
+                "addressLine2": ["input#address-ext"],
+                "addressLevel2": ["input#city"],
+                "addressLevel1": ["select#state"],
+                "country": ["select#country"],
+                "postalCode": ["input#postcode"]
+              }
+            }
+          ]
+        },
+        // ── Test coverage: category (search — should not autofill) ──
+        "/forms/search/simple-search": {
+          "forms": [
+            {
+              "category": "search",
+              "selectors": {
+                "form": ["form[role='search']"]
+              }
+            }
+          ]
+        },
+        // ── Test coverage: pathname blocklist ──
+        // null = suppress autofill on this page
+        "/forms/subscribe/newsletter-simple": null,
+        // ── Test coverage: iframe boundary ──
+        // Included for future validation.
+        // "password" deliberately excluded to make the host fill signature unique
+        "/forms/login/iframe-login": {
+          "forms": [
+            {
+              "category": "account-login",
+              "selectors": {
+                "username": ["iframe#test-iframe >>> input#username"]
               }
             }
           ]
         }
       }
     },
+    // ── Test coverage: port-specific hosts are distinct ──
+    // Rules for webtests.dev:8443 are separate from webtests.dev.
+    // This entry should NOT match plain webtests.dev requests.
+    // "password" deliberately excluded to make this host fill signature unique
+    "webtests.dev:8443": {
+      "forms": [
+        {
+          "category": "account-login",
+          "selectors": {
+            "username": ["input#password"]
+          }
+        }
+      ]
+    },
+    // ── Test coverage: host blocklist ──
+    // null = suppress autofill on this host
+    "fill.dev": null,
     "www.bankofamerica.com": {
       "forms": [
         {
