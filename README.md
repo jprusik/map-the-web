@@ -22,7 +22,7 @@ websites. While semantics, standards, and specifications can help software
 developers navigate data concerns on the web, such conventions are sometimes
 incomplete, not widely implemented, or even leave a particular concern
 completely unaddressed. The primary goal of this project is to map out live
-websites which lack the implementation details that would otherwise enable
+websites that lack the implementation details that would otherwise enable
 software to interact with them as intended.
 
 ### Mapping Philosophies
@@ -39,7 +39,8 @@ With the aforementioned goals and intent in mind, Maps should:
   means for those concerns
 - avoid staleness and be kept up-to-date
 
-Because this project strives to deliver accountable curated guidance, the above concerns must ultimately and necessarily be vetted/validated by humans.
+Because this project strives to deliver accountable curated guidance, the above
+concerns must ultimately and necessarily be vetted/validated by humans.
 
 Maps are not intended to replace standard functionalities of the web, only to
 serve as a stopgap pending broader consensus and adoption of accepted standards.
@@ -48,7 +49,8 @@ serve as a stopgap pending broader consensus and adoption of accepted standards.
 
 While this project aspires to map all discovered gaps of the web, this is
 largely expected to be unachievable, given the size and ever-changing nature of
-the web. Consequently Maps should not be consumed as an absolute guarantee; websites can and will change.
+the web. Consequently Maps should not be consumed as an absolute guarantee;
+websites can and will change.
 
 Map-specific limitations can be found in their respective README documents.
 
@@ -56,29 +58,36 @@ Map-specific limitations can be found in their respective README documents.
 
 Each Map lives in its own subdirectory under `maps/`, named after its core
 concern (e.g. `maps/forms/`). A Map directory contains the JSON data file
-(`forms.jsonc`), its schema (`forms.schema.json`), and a `README.md` documenting
+(`forms.jsonc`), its versioned schema (e.g. `forms.v1.schema.json`), and a `README.md` documenting
 the Map's structure and usage.
 
 ### Versioning
 
-This project has two distinct versioning schemes for independent concerns: schema versions and release tags.
+This project has two distinct versioning schemes for independent concerns:
+schema versions and release tags.
 
 #### Schema Versions
 
-Each Map file includes a required top-level `version` field that identifies
+Each Map file includes a required top-level `schemaVersion` field that identifies
 which revision of its schema the file conforms to. Schema versions use
 [semantic versioning](https://semver.org/):
 
-- **Major**: Breaking changes to the data structure or semantics
+- **Major**: Breaking changes to the data structure or semantics (e.g.
+  removing/renaming required properties, adding required properties)
 - **Minor**: Backwards-compatible additions (e.g. new optional properties, new
-  category values)
+  enum values)
 - **Patch**: Documentation or schema clarifications with no data-level impact
 
-Consumers should check the `version` field before processing a Map and reject or
-warn on unrecognized major versions. Build filenames include the schema major
-version (e.g. `forms.v1.json`), so a breaking schema change can ship alongside
-the previous version (`forms.v1.json` and `forms.v2.json` in the same release),
-allowing legacy consumers to continue fetching the version they support.
+Consumers who wish to validate their Map data should check the
+`schemaVersion` field before processing a Map and reject or warn on unrecognized
+major versions. Build filenames include the
+schema major version (e.g. `forms.v1.json`), so a breaking schema change can
+ship alongside the previous version (`forms.v1.json` and `forms.v2.json` in the
+same release), allowing legacy consumers to continue fetching the version they
+support.
+
+Map-specific versioning guidance can be found in their respective README
+documents.
 
 #### Release Tags
 
@@ -108,15 +117,25 @@ Each release includes a `manifest.json` with build metadata (timestamp, git SHA,
 and per-map schema versions) that consumers can use to check staleness or verify
 compatibility.
 
+Each release also includes the corresponding schema file for each Map (e.g.
+`forms.v1.schema.json` alongside `forms.v1.json`). Consumers that validate Map
+data should validate against the schema included in the same release, as minor
+version bumps may introduce new fields or values that would not pass validation
+against a stale schema copy. Consumers that do not validate should be prepared
+to gracefully handle unrecognized fields or values introduced by minor or patch
+schema changes.
+
 ## Glossary
 
 - **Map**: A JSON structure describing a categorical concern of real websites.
-  Each Map focuses on a single concern (e.g. forms) and lives in the `maps/` as a named
-  directory alongside its documentation and schema.
+  Each Map focuses on a single concern (e.g. forms) and lives in a named
+  subdirectory under `maps/` alongside its documentation and schema.
 
 - **Consumer**: Any application or tool that reads and acts on a Map. The Map
   describes what exists on a page; the consumer decides what to do with that
   information.
+
+- **Author**: Any maintainer of source Maps that get built to release channels.
 
 - **Heuristic detection**: Automated inference of page element purposes based on
   attributes, labels, or surrounding markup.
