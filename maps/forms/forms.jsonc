@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "schemaVersion": "1.0.0",
   "hosts": {
     // ── Test coverage: targeted fill, www equivalence, heuristic fallback ──
     // Site-wide login fallback: applies to any page on webtests.dev
@@ -15,7 +15,7 @@
       "forms": [
         {
           "category": "account-login",
-          "selectors": {
+          "fields": {
             "username": ["input#password"],
             "password": ["input#username"]
           }
@@ -27,7 +27,7 @@
           "forms": [
             {
               "category": "payment-card",
-              "selectors": {
+              "fields": {
                 "cardholderName": ["input#card-name"],
                 "cardNumber": ["input#card-number"],
                 "cardExpirationDate": ["input#card-expiration"],
@@ -43,7 +43,7 @@
           "forms": [
             {
               "category": "account-login",
-              "selectors": {
+              "fields": {
                 "username": [
                   "div#form-container >>> form > div:nth-of-type(2) > div >>> input[name='password']"
                 ],
@@ -61,7 +61,7 @@
           "forms": [
             {
               "category": "account-login",
-              "selectors": {
+              "fields": {
                 "username": [
                   "input#password[name='password']",
                   "input[name='password']"
@@ -81,7 +81,7 @@
           "forms": [
             {
               "category": "account-login",
-              "selectors": {
+              "fields": {
                 "username": ["input#password"],
                 "password": ["input#username"]
               }
@@ -94,7 +94,7 @@
           "forms": [
             {
               "category": "account-login",
-              "selectors": {
+              "fields": {
                 "username": ["input#password"],
                 "password": ["input#username"]
               }
@@ -106,9 +106,29 @@
           "forms": [
             {
               "category": "account-creation",
-              "selectors": {
+              "fields": {
                 "username": ["input#password"],
                 "newPassword": ["input#email"]
+              }
+            }
+          ]
+        },
+        // ── Test coverage: single values represented by multiple inputs (totp) ──
+        "/forms/login/security-code-multi-input": {
+          "forms": [
+            {
+              "category": "account-login",
+              "fields": {
+                "oneTimeCode": [
+                  [
+                    "input[name='otp-code-0']",
+                    "input[name='otp-code-1']",
+                    "input[name='otp-code-2']",
+                    "input[name='otp-code-3']",
+                    "input[name='otp-code-4']",
+                    "input[name='otp-code-5']"
+                  ]
+                ]
               }
             }
           ]
@@ -118,7 +138,7 @@
           "forms": [
             {
               "category": "identity",
-              "selectors": {
+              "fields": {
                 "fullName": ["input#full-name"],
                 "organization": ["input#company-name"],
                 "email": ["input#email"],
@@ -138,8 +158,9 @@
           "forms": [
             {
               "category": "search",
-              "selectors": {
-                "form": ["form[role='search']"]
+              "container": ["form[role='search']"],
+              "fields": {
+                "searchTerm": ["input#search"]
               }
             }
           ]
@@ -154,7 +175,7 @@
           "forms": [
             {
               "category": "account-login",
-              "selectors": {
+              "fields": {
                 "username": ["iframe#test-iframe >>> input#username"]
               }
             }
@@ -170,7 +191,7 @@
       "forms": [
         {
           "category": "account-login",
-          "selectors": {
+          "fields": {
             "username": ["input#password"]
           }
         }
@@ -182,7 +203,7 @@
     "www.bankofamerica.com": {
       "forms": [
         {
-          "selectors": {
+          "fields": {
             "username": ["input#oid"],
             "password": ["input#pass"]
           }
@@ -194,7 +215,7 @@
         "/login": {
           "forms": [
             {
-              "selectors": {
+              "fields": {
                 "username": ["input#oid"],
                 "password": ["input#pass"]
               }

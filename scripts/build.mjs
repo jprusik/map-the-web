@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync, cpSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, rmSync, cpSync } from "fs";
 import { createHash } from "crypto";
 import { basename, dirname, join, relative } from "path";
 import { glob } from "node:fs/promises";
@@ -8,11 +8,16 @@ import stripJsonComments from "strip-json-comments";
 
 const DIST = "dist";
 
+// Clean previous build output
+rmSync(DIST, { recursive: true, force: true });
+
 // Step 1: Find Maps
 
 const maps = [];
 
-for await (const schemaFile of glob("maps/*/*.schema.json")) {
+// Each map lives one level deep under maps/ (e.g. maps/forms/).
+// Schema files are versioned: <name>.v<major>.schema.json
+for await (const schemaFile of glob("maps/*/*.v*.schema.json")) {
   const dir = dirname(schemaFile);
   const name = basename(dir);
   const dataFile = join(dir, `${name}.jsonc`);
@@ -52,13 +57,23 @@ for (const map of maps) {
     console.log(`Validated: ${map.dataFile}`);
   }
 
-  // Warn on www. host keys
+  // Normalize unicode host keys to punycode and warn on www. prefixes
   if (data.hosts) {
     for (const host of Object.keys(data.hosts)) {
-      if (host.startsWith("www.")) {
+      // Normalize unicode to punycode via URL API
+      const normalizedHost = new URL(`http://${host}`).host;
+      if (normalizedHost !== host) {
+        data.hosts[normalizedHost] = data.hosts[host];
+        delete data.hosts[host];
+        console.log(
+          `\x1b[36mNormalized: "${host}" → "${normalizedHost}"\x1b[0m`,
+        );
+      }
+
+      if (normalizedHost.startsWith("www.")) {
         console.warn(
-          `\x1b[33mWarning: ${map.dataFile} - host key "${host}" uses a www. prefix. ` +
-            `Author under the non-www host as canonical unless hosts differ.\x1b[0m`,
+          `\x1b[33mWarning: ${map.dataFile} - host key "${normalizedHost}" uses a www. prefix. ` +
+            `Author under the non-www host unless the www-prefixed host differs in some relevant way.\x1b[0m`,
         );
       }
     }
@@ -94,7 +109,7 @@ for (const map of maps) {
   mkdirSync(outDir, { recursive: true });
 
   // Extract major version for filename suffix
-  const majorVersion = map.data.version.split(".")[0];
+  const majorVersion = map.data.schemaVersion.split(".")[0];
   const versionedName = `${map.name}.v${majorVersion}`;
 
   // Minify data JSON
@@ -107,11 +122,14 @@ for (const map of maps) {
   const outSchemaFile = join(outDir, `${versionedName}.schema.json`);
   cpSync(map.schemaFile, outSchemaFile);
 
-  // Record in manifest
-  manifest.maps[map.name] = {
-    version: map.data.version,
+  // Record in manifest (array per map to support multiple schema versions)
+  if (!manifest.maps[map.name]) {
+    manifest.maps[map.name] = [];
+  }
+  manifest.maps[map.name].push({
+    schemaVersion: map.data.schemaVersion,
     files: [relative(DIST, outDataFile), relative(DIST, outSchemaFile)],
-  };
+  });
 
   // Compute checksums
   for (const f of [outDataFile, outSchemaFile]) {
