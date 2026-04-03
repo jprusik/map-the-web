@@ -7,8 +7,12 @@ on:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   check:
+    name: Lint, validate, and check formatting
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -23,6 +27,12 @@ jobs:
           cache-dependency-path: "**/package-lock.json"
           node-version-file: ".nvmrc"
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - run: npm run check
+      - name: Run checks
+        env:
+          # Gates inline PR annotations from the forms map selector linter
+          ENABLE_SELECTOR_LINT_PR_FEEDBACK:
+            ${{ vars.ENABLE_SELECTOR_LINT_PR_FEEDBACK }}
+        run: npm run check
