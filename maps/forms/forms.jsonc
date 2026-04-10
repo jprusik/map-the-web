@@ -1,10 +1,30 @@
 {
   "schemaVersion": "1.0.0",
   "hosts": {
+    "webtests.dev": {
+      "pathnames": {
+        "/forms/login/ambiguous-inputs": {
+          "forms": [
+            {
+              "category": "account-login",
+              "container": ["div.ambiguous-inputs-container"],
+              "fields": {
+                "username": ["input[name='u']"],
+                // The input type for password here is "text"
+                "password": ["input[name='p']"]
+              },
+              "actions": {
+                "submit": ["button#ambiguous-inputs-go"]
+              }
+            }
+          ]
+        }
+      }
+    },
     // ── Test coverage: host blocklist ──
     // null = suppress autofill on this host
     "fill.dev": null,
-    "www.bankofamerica.com": {
+    "bankofamerica.com": {
       "forms": [
         {
           "category": "account-login",
