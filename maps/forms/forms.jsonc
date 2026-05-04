@@ -215,7 +215,21 @@
     },
     // ── Test coverage: host blocklist ──
     // null = suppress autofill on this host
-    "fill.dev": null,
+    "fill.dev": {
+      "pathnames": {
+        "/form/login-simple": {
+          "forms": [
+            {
+              "category": "account-login",
+              "fields": {
+                "username": ["input#password"],
+                "password": ["input#username"]
+              }
+            }
+          ]
+        }
+      }
+    },
     "www.bankofamerica.com": {
       "forms": [
         {
